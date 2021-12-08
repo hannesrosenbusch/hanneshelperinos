@@ -163,6 +163,19 @@ def display_group_comparison(outputcsv, comparison_var, df):
 
 ################################################################################################################################
 def go(inputs):
+  import pandas as pd
+  import io
+  import numpy as np 
+  from textblob import TextBlob
+  import pandas as pd
+  import matplotlib.pyplot as plt
+  import time
+  from scipy.stats import ttest_ind
+  from easynmt import EasyNMT
+  from transformers import pipeline
+  import base64
+  import string
+  
   df = inputs[0]
   analysis_var = inputs[1].widget.children[0].value
   comparison_var = inputs[2].widget.children[0].value
