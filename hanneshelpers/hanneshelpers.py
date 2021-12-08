@@ -96,6 +96,7 @@ def plot_current_sentiment_totals(prob_posit_user, prob_negat_user, error):
 
 def display_highlights(df, highscores_i, lowscores_i, analysis_var):
   from IPython.display import Markdown, display
+  import numpy as np
   df["Highlights"] = df[analysis_var]
   df = df.loc[np.append(highscores_i, lowscores_i), :]
   display(pd.DataFrame(df["Highlights"]))
