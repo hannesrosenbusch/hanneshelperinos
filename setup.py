@@ -9,7 +9,7 @@ setup(
     # Needed to actually package something
     packages=['hanneshelpers'],
     # Needed for dependencies
-    install_requires=['numpy'],
+    install_requires=['easynmt==2.0.2'],
     # *strongly* suggested for sharing
     version='0.1',
     # The license can be anything you like
