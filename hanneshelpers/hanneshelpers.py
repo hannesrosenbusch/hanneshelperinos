@@ -1,31 +1,3 @@
-def user_input():
-  from ipywidgets import interact
-  import ipywidgets as widgets
-  from google.colab import files
-  import pandas as pd
-  import io
-
-  #data upload
-  def returner(x):
-    return(x)
-  def returner2(x):
-    return(x)
-  def returner3(x):
-    return(x)
-
-  print("Please upload the raw csv file from the analyzer:")
-  uploaded = files.upload()
-  my_file = list(uploaded)[0]
-  df = pd.read_csv(io.BytesIO(uploaded[my_file]), encoding= "latin_1", sep = ";")
-  print("Please select the column containing the texts:")
-  analysis_v = interact(returner, x = list(df.columns.insert(0, "No variable selected"))) #
-  print("Optionally select a column with binary values to compare groups in their sentiment:")
-  comparison_v = interact(returner2, x = list(df.columns.insert(0, "No variable selected"))) #
-  print("Please select the language of the texts:")
-  lang_v = interact(returner3, x = ["English","German","Spanish","French", "Other"]) #
-  return([df, analysis_v, comparison_v, lang_v])
-
-
 def initiate_global_vars():
   from easynmt import EasyNMT
   from transformers import pipeline
@@ -52,8 +24,7 @@ def translate_and_correct(translation_analysis, lang, outputcsv):
         textBlb = TextBlob(t)           
         trans.append(str(textBlb.correct()))
   else:
-      raise Exception('translation failed')
-	
+      raise Exception('language not implemented')
   trans = [trans[i] if outputcsv.text[i] != "-" else "-" for i in range(len(trans))]
   outputcsv["trans"] = trans
   return(outputcsv)
@@ -122,14 +93,8 @@ def plot_current_sentiment_totals(prob_posit_user, prob_negat_user, error):
   ax[1].set_ylim([0, 100])
   plt.show()
 
-# def emoji_updates(df, pic, posimage, negimage, sentiment_cont, i):
-# 	prog_text.text( str(np.round((1+i)/df.shape[0]*100)) + "% done")
-# 	if sentiment_cont > 0:		
-# 		pic.image(posimage, caption='Text' + str(i+1), width = 100)
-# 	elif sentiment_cont < 0:
-# 		pic.image(negimage, caption='Text' + str(i+1), width = 100)
-
 def display_highlights(df, highscores_i, lowscores_i, analysis_var):
+  from IPython.display import Markdown, display
   df["Highlights"] = df[analysis_var]
   df = df.loc[np.append(highscores_i, lowscores_i), :]
   display(pd.DataFrame(df["Highlights"]))
@@ -171,12 +136,12 @@ def display_group_comparison(outputcsv, comparison_var, df):
   				"The effect is " + str(significance) + " different from zero (p-value: " + str(p) + ").")
   return(outputcsv)
 
-################################################################################################################################
 def go(inputs):
   import numpy as np 
   import pandas as pd
   import matplotlib.pyplot as plt
   import time
+  from IPython.display import Markdown, display
 
   df = inputs[0]
   analysis_var = inputs[1].widget.children[0].value
@@ -239,3 +204,28 @@ def go(inputs):
     outputcsv.drop("trans", axis=1, inplace=True)
     outputcsv.to_csv('sentiment_scores.csv') 
     files.download('sentiment_scores.csv')
+
+def user_input():
+  from ipywidgets import interact
+  import ipywidgets as widgets
+  from google.colab import files
+  import pandas as pd
+  import io
+  def returner(x):
+    return(x)
+  def returner2(x):
+    return(x)
+  def returner3(x):
+    return(x)
+  print("")
+  print("Please upload the raw csv file from the analyzer:")
+  uploaded = files.upload()
+  my_file = list(uploaded)[0]
+  df = pd.read_csv(io.BytesIO(uploaded[my_file]), encoding= "latin_1", sep = ";")
+  print("Please select the column containing the texts:")
+  analysis_v = interact(returner, x = list(df.columns.insert(0, "No variable selected"))) #
+  print("Optionally select a column with binary values to compare groups in their sentiment:")
+  comparison_v = interact(returner2, x = list(df.columns.insert(0, "No variable selected"))) #
+  print("Please select the language of the texts:")
+  lang_v = interact(returner3, x = ["English","German","Spanish","French", "Other"]) #
+  return([df, analysis_v, comparison_v, lang_v])
