@@ -11,7 +11,6 @@ def translate_and_correct(translation_analysis, lang, outputcsv):
   from textblob import TextBlob
   outputcsv["text"] = outputcsv["text"].str.replace("\!\!+", "!") 
   outputcsv["text"] = outputcsv["text"].str.replace("\?\?+", "?") 
-  print(lang == "German")
   if lang == "German":
     trans = translation_analysis.translate(outputcsv["text"], source_lang = "de", target_lang = "en")
   elif lang == "Spanish":
@@ -143,6 +142,7 @@ def go(inputs):
   import matplotlib.pyplot as plt
   import time
   from IPython.display import Markdown, display
+  from google.colab import files
 
   df = inputs[0]
   analysis_var = inputs[1].widget.children[0].value
