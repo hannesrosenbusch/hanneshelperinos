@@ -223,10 +223,13 @@ def user_input():
   uploaded = files.upload()
   my_file = list(uploaded)[0]
   df = pd.read_csv(io.BytesIO(uploaded[my_file]), encoding= "latin_1", sep = ";")
+  print("")
   print("Please select the column containing the texts:")
   analysis_v = interact(returner, x = list(df.columns.insert(0, "No variable selected"))) #
+  print("")
   print("Optionally select a column with binary values to compare groups in their sentiment:")
   comparison_v = interact(returner2, x = list(df.columns.insert(0, "No variable selected"))) #
+  print("")
   print("Please select the language of the texts:")
   lang_v = interact(returner3, x = ["English","German","Spanish","French", "Other"]) #
   return([df, analysis_v, comparison_v, lang_v])
