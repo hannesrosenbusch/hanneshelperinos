@@ -72,6 +72,7 @@ def update_highlights(sentiment_cont, highscores, highscores_i, lowscores, lowsc
 
 def plot_current_sentiment_totals(prob_posit_user, prob_negat_user, error):
   import matplotlib.pyplot as plt
+  import numpy as np
 
   plt.close('all')
   pos_perc = 100*prob_posit_user
