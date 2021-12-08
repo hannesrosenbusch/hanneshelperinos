@@ -58,23 +58,24 @@ def translate_and_correct(translation_analysis, lang, outputcsv):
   return(outputcsv)
 
 def get_aggregate_sentiment(sentiment_analysis, neutral_words, outputcsv, i, punct_table):
-	if outputcsv.trans[i].lower().translate(punct_table) in neutral_words:
-		sentiment_cont = sentiment_cat = 0
-	else:
-		try:
-			s = sentiment_analysis(outputcsv.trans[i])[0]
-			if s['label'] == "NEGATIVE":
-				sign = -1
-			else:
-				sign = 1
-			sentiment_cont = sign * s['score']
-			sentiment_cat = sign * (s['score'] > 0.95)
-		except:
-			sentiment_cont = sentiment_cat = 0
-			print("error at:" + outputcsv.trans[i])
-	outputcsv.loc[i, "sentiment_continuous"] = np.round(sentiment_cont * 100)
-	outputcsv.loc[i, "sentiment_categorical"] = sentiment_cat
-	return(sentiment_cat, sentiment_cont, outputcsv)
+  import numpy as np
+  if outputcsv.trans[i].lower().translate(punct_table) in neutral_words:
+  	sentiment_cont = sentiment_cat = 0
+  else:
+  	try:
+  		s = sentiment_analysis(outputcsv.trans[i])[0]
+  		if s['label'] == "NEGATIVE":
+  			sign = -1
+  		else:
+  			sign = 1
+  		sentiment_cont = sign * s['score']
+  		sentiment_cat = sign * (s['score'] > 0.95)
+  	except:
+  		sentiment_cont = sentiment_cat = 0
+  		print("error at:" + outputcsv.trans[i])
+  outputcsv.loc[i, "sentiment_continuous"] = np.round(sentiment_cont * 100)
+  outputcsv.loc[i, "sentiment_categorical"] = sentiment_cat
+  return(sentiment_cat, sentiment_cont, outputcsv)
 
 def update_statistics(n, n_pos, n_neg, sentiment_cat, sentiment_cont):
 	n += 1
