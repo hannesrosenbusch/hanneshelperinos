@@ -1,4 +1,12 @@
 def user_input():
+  from __future__ import print_function
+  from ipywidgets import interact, interactive, fixed, interact_manual
+  import ipywidgets as widgets
+  from google.colab import files
+  from IPython.display import display, Markdown
+  import pandas as pd
+  import io
+
   #data upload
   def returner(x):
     return(x)
