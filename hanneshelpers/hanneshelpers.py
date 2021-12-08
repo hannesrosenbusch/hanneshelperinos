@@ -26,7 +26,6 @@ def user_input():
   return([df, analysis_v, comparison_v, lang_v])
 
 
-
 def initiate_global_vars():
   from easynmt import EasyNMT
   from transformers import pipeline
@@ -80,25 +79,29 @@ def get_aggregate_sentiment(sentiment_analysis, neutral_words, outputcsv, i, pun
   return(sentiment_cat, sentiment_cont, outputcsv)
 
 def update_statistics(n, n_pos, n_neg, sentiment_cat, sentiment_cont):
-	n += 1
-	n_pos += (sentiment_cont > 0)		
-	n_neg += (sentiment_cont < 0)
-	prob_posit_user = (n_pos  / n) 
-	prob_negat_user = (n_neg / n) 
-	prob_max = np.max([prob_posit_user, prob_negat_user])
-	error =  1.96 * np.sqrt((prob_max * (1-prob_max))/n)
-	return(n, n_pos, n_neg, prob_posit_user, prob_negat_user, error)
+  import numpy as np
+  n += 1
+  n_pos += (sentiment_cont > 0)		
+  n_neg += (sentiment_cont < 0)
+  prob_posit_user = (n_pos  / n) 
+  prob_negat_user = (n_neg / n) 
+  prob_max = np.max([prob_posit_user, prob_negat_user])
+  error =  1.96 * np.sqrt((prob_max * (1-prob_max))/n)
+  return(n, n_pos, n_neg, prob_posit_user, prob_negat_user, error)
 
 def update_highlights(sentiment_cont, highscores, highscores_i, lowscores, lowscores_i, i, df):
-	if (sentiment_cont > np.min(highscores)) and (df.loc[i, "text_low"] not in df.loc[highscores_i, "text_low"].values):
-		highscores_i = np.array([i, highscores_i[np.argmax(highscores)]])
-		highscores = np.array([sentiment_cont, np.max(highscores)])
-	elif sentiment_cont < np.max(lowscores) and (df.loc[i, "text_low"] not in df.loc[lowscores_i, "text_low"]):
-		lowscores_i = np.array([i, lowscores_i[np.argmin(lowscores)]])
-		lowscores = np.array([sentiment_cont, np.min(lowscores)])
-	return(highscores, highscores_i, lowscores, lowscores_i)
+  import numpy as np
+  if (sentiment_cont > np.min(highscores)) and (df.loc[i, "text_low"] not in df.loc[highscores_i, "text_low"].values):
+  	highscores_i = np.array([i, highscores_i[np.argmax(highscores)]])
+  	highscores = np.array([sentiment_cont, np.max(highscores)])
+  elif sentiment_cont < np.max(lowscores) and (df.loc[i, "text_low"] not in df.loc[lowscores_i, "text_low"]):
+  	lowscores_i = np.array([i, lowscores_i[np.argmin(lowscores)]])
+  	lowscores = np.array([sentiment_cont, np.min(lowscores)])
+  return(highscores, highscores_i, lowscores, lowscores_i)
 
 def plot_current_sentiment_totals(prob_posit_user, prob_negat_user, error):
+  import matplotlib.pyplot as plt
+
   plt.close('all')
   pos_perc = 100*prob_posit_user
   neg_perc = 100*prob_negat_user
@@ -119,65 +122,62 @@ def plot_current_sentiment_totals(prob_posit_user, prob_negat_user, error):
   ax[1].set_ylim([0, 100])
   plt.show()
 
-def emoji_updates(df, pic, posimage, negimage, sentiment_cont, i):
-	prog_text.text( str(np.round((1+i)/df.shape[0]*100)) + "% done")
-	if sentiment_cont > 0:		
-		pic.image(posimage, caption='Text' + str(i+1), width = 100)
-	elif sentiment_cont < 0:
-		pic.image(negimage, caption='Text' + str(i+1), width = 100)
+# def emoji_updates(df, pic, posimage, negimage, sentiment_cont, i):
+# 	prog_text.text( str(np.round((1+i)/df.shape[0]*100)) + "% done")
+# 	if sentiment_cont > 0:		
+# 		pic.image(posimage, caption='Text' + str(i+1), width = 100)
+# 	elif sentiment_cont < 0:
+# 		pic.image(negimage, caption='Text' + str(i+1), width = 100)
 
 def display_highlights(df, highscores_i, lowscores_i, analysis_var):
-	df["Highlights"] = df[analysis_var]
-	df = df.loc[np.append(highscores_i, lowscores_i), :]
-	display(pd.DataFrame(df["Highlights"]))
+  df["Highlights"] = df[analysis_var]
+  df = df.loc[np.append(highscores_i, lowscores_i), :]
+  display(pd.DataFrame(df["Highlights"]))
 
 def display_group_comparison(outputcsv, comparison_var, df):
-	if comparison_var != "No variable selected":
-		outputcsv[comparison_var] = df[comparison_var]
-		vals = list(set(outputcsv[comparison_var]))
-		if len(vals) != 2:
-			stop("Comparison variable must have exactly two possible values!")
-		else:
-			group1_label = vals[0]
-			group2_label = vals[1]
-			group1_ind = outputcsv[comparison_var] == group1_label
-			group2_ind = outputcsv[comparison_var] == group2_label
-			group1_mean = np.mean(outputcsv.sentiment_continuous[group1_ind])
-			group2_mean = np.mean(outputcsv.sentiment_continuous[group2_ind])
-			group1_std = np.std(outputcsv.sentiment_continuous[group1_ind])
-			group2_std = np.std(outputcsv.sentiment_continuous[group2_ind])
-			sidedness = np.where(group1_mean > group2_mean, "more positive sentiments", "more negative sentiments")
-			d = abs((group1_mean - group2_mean) / np.sqrt((group1_std ** 2 + group2_std **2) / 2))
-			d = np.round(d, 3)
-			if d < 0.1:
-				effsize = "negligible"
-			elif d < 0.2:
-				effsize = "small"
-			elif d < 0.5:
-				effsize = "medium"
-			else:
-				effsize = "large"
-			stat, p = ttest_ind(outputcsv.sentiment_continuous[group1_ind], outputcsv.sentiment_continuous[group2_ind])
-			significance = np.where(p < 0.05, "significantly", "not significantly")
-			p = np.round(p, 3)
-			print("Group " + str(group1_label) + " expressed " + str(sidedness) + " than group " + str(group2_label) +
-					".  \nThe magnitude of this difference can be considered " + effsize + " (Cohen's D: " + str(d) + ").  \n" +
-					"The effect is " + str(significance) + " different from zero (p-value: " + str(p) + ").")
-	return(outputcsv)
+  import numpy as np
+  from scipy.stats import ttest_ind
+
+  if comparison_var != "No variable selected":
+  	outputcsv[comparison_var] = df[comparison_var]
+  	vals = list(set(outputcsv[comparison_var]))
+  	if len(vals) != 2:
+  		stop("Comparison variable must have exactly two possible values!")
+  	else:
+  		group1_label = vals[0]
+  		group2_label = vals[1]
+  		group1_ind = outputcsv[comparison_var] == group1_label
+  		group2_ind = outputcsv[comparison_var] == group2_label
+  		group1_mean = np.mean(outputcsv.sentiment_continuous[group1_ind])
+  		group2_mean = np.mean(outputcsv.sentiment_continuous[group2_ind])
+  		group1_std = np.std(outputcsv.sentiment_continuous[group1_ind])
+  		group2_std = np.std(outputcsv.sentiment_continuous[group2_ind])
+  		sidedness = np.where(group1_mean > group2_mean, "more positive sentiments", "more negative sentiments")
+  		d = abs((group1_mean - group2_mean) / np.sqrt((group1_std ** 2 + group2_std **2) / 2))
+  		d = np.round(d, 3)
+  		if d < 0.1:
+  			effsize = "negligible"
+  		elif d < 0.2:
+  			effsize = "small"
+  		elif d < 0.5:
+  			effsize = "medium"
+  		else:
+  			effsize = "large"
+  		stat, p = ttest_ind(outputcsv.sentiment_continuous[group1_ind], outputcsv.sentiment_continuous[group2_ind])
+  		significance = np.where(p < 0.05, "significantly", "not significantly")
+  		p = np.round(p, 3)
+  		print("Group " + str(group1_label) + " expressed " + str(sidedness) + " than group " + str(group2_label) +
+  				".  \nThe magnitude of this difference can be considered " + effsize + " (Cohen's D: " + str(d) + ").  \n" +
+  				"The effect is " + str(significance) + " different from zero (p-value: " + str(p) + ").")
+  return(outputcsv)
 
 ################################################################################################################################
 def go(inputs):
-  import pandas as pd
-  import io
   import numpy as np 
-  from textblob import TextBlob
   import pandas as pd
   import matplotlib.pyplot as plt
   import time
-  from scipy.stats import ttest_ind
-  import base64
-  import string
-  
+
   df = inputs[0]
   analysis_var = inputs[1].widget.children[0].value
   comparison_var = inputs[2].widget.children[0].value
