@@ -28,11 +28,10 @@ def user_input():
 def initiate_global_vars():
   from easynmt import EasyNMT
   from transformers import pipeline
-
-	translation_analysis = EasyNMT('opus-mt')
-	sentiment_analysis = pipeline("sentiment-analysis",model="siebert/sentiment-roberta-large-english")
-	punct_table = str.maketrans({key: None for key in string.punctuation})
-	return(translation_analysis, sentiment_analysis, punct_table)
+  translation_analysis = EasyNMT('opus-mt')
+  sentiment_analysis = pipeline("sentiment-analysis",model="siebert/sentiment-roberta-large-english")
+  punct_table = str.maketrans({key: None for key in string.punctuation})
+  return(translation_analysis, sentiment_analysis, punct_table)
 
 def translate_and_correct(translation_analysis, lang, outputcsv):
   from textblob import TextBlob
