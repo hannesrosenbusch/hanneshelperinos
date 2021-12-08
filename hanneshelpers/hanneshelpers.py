@@ -1,8 +1,7 @@
 def user_input():
-  from ipywidgets import interact, interactive, fixed, interact_manual
+  from ipywidgets import interact
   import ipywidgets as widgets
   from google.colab import files
-  from IPython.display import display, Markdown
   import pandas as pd
   import io
 
@@ -27,14 +26,16 @@ def user_input():
   return([df, analysis_v, comparison_v, lang_v])
 
 def initiate_global_vars():
-	#posimage = Image.open('positive_emoji.png')
-	#negimage = Image.open('negative_emoji.png')
+  from easynmt import EasyNMT
+  from transformers import pipeline
+
 	translation_analysis = EasyNMT('opus-mt')
 	sentiment_analysis = pipeline("sentiment-analysis",model="siebert/sentiment-roberta-large-english")
 	punct_table = str.maketrans({key: None for key in string.punctuation})
 	return(translation_analysis, sentiment_analysis, punct_table)
 
 def translate_and_correct(translation_analysis, lang, outputcsv):
+  from textblob import TextBlob
   outputcsv["text"] = outputcsv["text"].str.replace("\!\!+", "!") 
   outputcsv["text"] = outputcsv["text"].str.replace("\?\?+", "?") 
   print(lang == "German")
@@ -171,11 +172,9 @@ def go(inputs):
   import matplotlib.pyplot as plt
   import time
   from scipy.stats import ttest_ind
-  from easynmt import EasyNMT
-  from transformers import pipeline
   import base64
   import string
-  
+
   df = inputs[0]
   analysis_var = inputs[1].widget.children[0].value
   comparison_var = inputs[2].widget.children[0].value
