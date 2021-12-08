@@ -172,64 +172,64 @@ def go(inputs):
 
   ################################################################################################################################
 
-    df = inputs[0]
-    analysis_var = inputs[1].widget.children[0].value
-    comparison_var = inputs[2].widget.children[0].value
-    lang = inputs[3].widget.children[0].value
+  df = inputs[0]
+  analysis_var = inputs[1].widget.children[0].value
+  comparison_var = inputs[2].widget.children[0].value
+  lang = inputs[3].widget.children[0].value
 
-    neutral_words = ['','nothing','none',"i don't know","don't know",'more or less no','none appreciable','no idea',
-    'no feelings','i feel nothing',"i don't think of anything",'it does not trigger any emotions','neutral',
-    'no associations','no emotions','no emotion','no feeling','neither good nor bad','neither positive nor negative','neither nor',
-    "i don't know this",'nan','actually none',"can't describe in words","can't describe"]
+  neutral_words = ['','nothing','none',"i don't know","don't know",'more or less no','none appreciable','no idea',
+  'no feelings','i feel nothing',"i don't think of anything",'it does not trigger any emotions','neutral',
+  'no associations','no emotions','no emotion','no feeling','neither good nor bad','neither positive nor negative','neither nor',
+  "i don't know this",'nan','actually none',"can't describe in words","can't describe"]
 
-    plt.rcParams['figure.dpi'] = 200
-    plt.rcParams['figure.figsize'] = [2.8, 1.4]
+  plt.rcParams['figure.dpi'] = 200
+  plt.rcParams['figure.figsize'] = [2.8, 1.4]
 
-    #load materials
-    translation_analysis, sentiment_analysis, punct_table = initiate_global_vars()
+  #load materials
+  translation_analysis, sentiment_analysis, punct_table = initiate_global_vars()
 
-    if (analysis_var != "No variable selected"):
-      start = time.time()
-      n = 4 #Agresti–Coull correction
-      n_pos = n_neg = 2
-      highscores = lowscores = highscores_i = lowscores_i = np.array([0])
-      #prog_text, emoji_pic, barpl, result_table = st.empty(), st.empty(), st.empty(), st.empty()
-      df[analysis_var] =  df[analysis_var].astype("str")
-      df["text_low"] = [text.lower() for text in df[analysis_var]]
-      df["text_low"] =  df["text_low"].astype("str")
-      outputcsv = df.iloc[:, [0,1]].copy()
-      outputcsv["text"] = df[analysis_var]
-      outputcsv["trans"] = str()
-      outputcsv["sentiment_categorical"] = int()
-      outputcsv["sentiment_continuous"] = float()
-      #translation and correction
-      outputcsv = translate_and_correct(translation_analysis, lang, outputcsv)
-      for i, text in enumerate(outputcsv.trans):
-        #sentiment prediction and storing
-        sentiment_cat, sentiment_cont, outputcsv = get_aggregate_sentiment(sentiment_analysis, neutral_words, outputcsv, i, punct_table)
-        if sentiment_cat != 0: #for efficiency and mutual informativeness
-          #update highlights
-          highscores, highscores_i, lowscores, lowscores_i = update_highlights(sentiment_cont, highscores, highscores_i, lowscores, lowscores_i, i, df)
+  if (analysis_var != "No variable selected"):
+    start = time.time()
+    n = 4 #Agresti–Coull correction
+    n_pos = n_neg = 2
+    highscores = lowscores = highscores_i = lowscores_i = np.array([0])
+    #prog_text, emoji_pic, barpl, result_table = st.empty(), st.empty(), st.empty(), st.empty()
+    df[analysis_var] =  df[analysis_var].astype("str")
+    df["text_low"] = [text.lower() for text in df[analysis_var]]
+    df["text_low"] =  df["text_low"].astype("str")
+    outputcsv = df.iloc[:, [0,1]].copy()
+    outputcsv["text"] = df[analysis_var]
+    outputcsv["trans"] = str()
+    outputcsv["sentiment_categorical"] = int()
+    outputcsv["sentiment_continuous"] = float()
+    #translation and correction
+    outputcsv = translate_and_correct(translation_analysis, lang, outputcsv)
+    for i, text in enumerate(outputcsv.trans):
+      #sentiment prediction and storing
+      sentiment_cat, sentiment_cont, outputcsv = get_aggregate_sentiment(sentiment_analysis, neutral_words, outputcsv, i, punct_table)
+      if sentiment_cat != 0: #for efficiency and mutual informativeness
+        #update highlights
+        highscores, highscores_i, lowscores, lowscores_i = update_highlights(sentiment_cont, highscores, highscores_i, lowscores, lowscores_i, i, df)
 
-          #update statistics
-          n, n_pos, n_neg, prob_posit_user, prob_negat_user, error = update_statistics(n, n_pos, n_neg, sentiment_cat, sentiment_cont)
+        #update statistics
+        n, n_pos, n_neg, prob_posit_user, prob_negat_user, error = update_statistics(n, n_pos, n_neg, sentiment_cat, sentiment_cont)
 
-      #display results table
-      display(Markdown("****RESULTS****"))
-      display(pd.DataFrame({"Positive": [str(np.round(prob_posit_user*100, 1)) + "%"], "Negative": [str(np.round(prob_negat_user*100, 1)) + "%"], "CI width": [str(np.round(2*error*100, 1))  + ' points'] }).style.hide_index())
+    #display results table
+    display(Markdown("****RESULTS****"))
+    display(pd.DataFrame({"Positive": [str(np.round(prob_posit_user*100, 1)) + "%"], "Negative": [str(np.round(prob_negat_user*100, 1)) + "%"], "CI width": [str(np.round(2*error*100, 1))  + ' points'] }).style.hide_index())
 
-      #sentiment plot update
-      plot_current_sentiment_totals(prob_posit_user, prob_negat_user, error)
+    #sentiment plot update
+    plot_current_sentiment_totals(prob_posit_user, prob_negat_user, error)
 
-      #display final highlights
-      display(Markdown("****HIGHLIGHTS / TEXT SAMPLES****"))
-      display_highlights(df, highscores_i, lowscores_i, analysis_var)
+    #display final highlights
+    display(Markdown("****HIGHLIGHTS / TEXT SAMPLES****"))
+    display_highlights(df, highscores_i, lowscores_i, analysis_var)
 
-      #display group comparison
-      display(Markdown("****GROUP COMPARISON****"))
-      outputcsv = display_group_comparison(outputcsv, comparison_var, df)
+    #display group comparison
+    display(Markdown("****GROUP COMPARISON****"))
+    outputcsv = display_group_comparison(outputcsv, comparison_var, df)
 
-      #raw score download
-      outputcsv.drop("trans", axis=1, inplace=True)
-      outputcsv.to_csv('sentiment_scores.csv') 
-      files.download('sentiment_scores.csv')
+    #raw score download
+    outputcsv.drop("trans", axis=1, inplace=True)
+    outputcsv.to_csv('sentiment_scores.csv') 
+    files.download('sentiment_scores.csv')
