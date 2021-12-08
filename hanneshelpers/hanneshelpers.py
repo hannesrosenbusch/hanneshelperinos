@@ -73,7 +73,6 @@ def update_highlights(sentiment_cont, highscores, highscores_i, lowscores, lowsc
 def plot_current_sentiment_totals(prob_posit_user, prob_negat_user, error):
   import matplotlib.pyplot as plt
   import numpy as np
-
   plt.close('all')
   pos_perc = 100*prob_posit_user
   neg_perc = 100*prob_negat_user
@@ -104,7 +103,7 @@ def display_highlights(df, highscores_i, lowscores_i, analysis_var):
 def display_group_comparison(outputcsv, comparison_var, df):
   import numpy as np
   from scipy.stats import ttest_ind
-
+  import pandas as pd
   if comparison_var != "No variable selected":
   	outputcsv[comparison_var] = df[comparison_var]
   	vals = list(set(outputcsv[comparison_var]))
