@@ -96,6 +96,7 @@ def plot_current_sentiment_totals(prob_posit_user, prob_negat_user, error):
 def display_highlights(df, highscores_i, lowscores_i, analysis_var):
   from IPython.display import Markdown, display
   import numpy as np
+  import pandas as pd
   df["Highlights"] = df[analysis_var]
   df = df.loc[np.append(highscores_i, lowscores_i), :]
   display(pd.DataFrame(df["Highlights"]))
@@ -103,7 +104,6 @@ def display_highlights(df, highscores_i, lowscores_i, analysis_var):
 def display_group_comparison(outputcsv, comparison_var, df):
   import numpy as np
   from scipy.stats import ttest_ind
-  import pandas as pd
   if comparison_var != "No variable selected":
   	outputcsv[comparison_var] = df[comparison_var]
   	vals = list(set(outputcsv[comparison_var]))
