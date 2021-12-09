@@ -231,8 +231,8 @@ def user_input():
   analysis_v = interact(returner, textcolumn = list(df.columns.insert(0, "No variable selected"))) #
   print("")
   print("Optionally select a column with binary values to compare groups in their sentiment:")
-  comparison_v = interact(returner2, groupcolumn = list(df.columns.insert(0, "No variable selected"))) #
+  comparison_v = interact(returner1, groupcolumn = list(df.columns.insert(0, "No variable selected"))) #
   print("")
   print("Please select the language of the texts:")
-  lang_v = interact(returner3, language = ["English","German","Spanish","French", "Other"]) #
+  lang_v = interact(returner2, language = ["English","German","Spanish","French", "Other"]) #
   return([df, analysis_v, comparison_v, lang_v])
