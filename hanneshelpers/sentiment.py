@@ -107,7 +107,7 @@ def display_group_comparison(outputcsv, comparison_var, df):
   	outputcsv[comparison_var] = df[comparison_var]
   	vals = list(set(outputcsv[comparison_var]))
   	if len(vals) != 2:
-  		print("Comparison variable must have exactly two possible values but has" + str(len(vals)))
+  		print("Comparison variable must have exactly two possible values but has " + str(len(vals)))
   	else:
   		group1_label = vals[0]
   		group2_label = vals[1]
@@ -212,24 +212,31 @@ def user_input():
   from google.colab import files
   import pandas as pd
   import io
-  def returner(x):
-    return(x)
-  def returner2(x):
-    return(x)
-  def returner3(x):
-    return(x)
+  def returner(textcolumn):
+    global inputs
+    inputs[1] = textcolumn
+  def returner1(groupcolumn):
+    global inputs
+    inputs[2] = groupcolumn
+  def returner2(language):
+    global inputs
+    inputs[3] = language
+
+
   print("")
   print("Please upload the raw csv file from the analyzer:")
   uploaded = files.upload()
   my_file = list(uploaded)[0]
   df = pd.read_csv(io.BytesIO(uploaded[my_file]), encoding= "latin_1", sep = ";")
+  global inputs
+  inputs[0] = df
   print("")
   print("Please select the column containing the texts:")
-  analysis_v = interact(returner, x = list(df.columns.insert(0, "No variable selected"))) #
+  analysis_v = interact(returner, textcolumn = list(df.columns.insert(0, "No variable selected"))) #
   print("")
   print("Optionally select a column with binary values to compare groups in their sentiment:")
-  comparison_v = interact(returner2, x = list(df.columns.insert(0, "No variable selected"))) #
+  comparison_v = interact(returner2, groupcolumn = list(df.columns.insert(0, "No variable selected"))) #
   print("")
   print("Please select the language of the texts:")
-  lang_v = interact(returner3, x = ["English","German","Spanish","French", "Other"]) #
+  lang_v = interact(returner3, language = ["English","German","Spanish","French", "Other"]) #
   return([df, analysis_v, comparison_v, lang_v])
