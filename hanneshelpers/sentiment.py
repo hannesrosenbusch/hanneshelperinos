@@ -107,7 +107,7 @@ def display_group_comparison(outputcsv, comparison_var, df):
   	outputcsv[comparison_var] = df[comparison_var]
   	vals = list(set(outputcsv[comparison_var]))
   	if len(vals) != 2:
-  		stop("Comparison variable must have exactly two possible values!")
+  		print("Comparison variable must have exactly two possible values but has" + str(len(vals)))
   	else:
   		group1_label = vals[0]
   		group2_label = vals[1]
