@@ -212,23 +212,19 @@ def user_input():
   from google.colab import files
   import pandas as pd
   import io
+  inputs = [None, None, None, None]
   def returner(textcolumn):
-    global inputs
     inputs[1] = textcolumn
   def returner1(groupcolumn):
-    global inputs
     inputs[2] = groupcolumn
   def returner2(language):
-    global inputs
     inputs[3] = language
-
 
   print("")
   print("Please upload the raw csv file from the analyzer:")
   uploaded = files.upload()
   my_file = list(uploaded)[0]
   df = pd.read_csv(io.BytesIO(uploaded[my_file]), encoding= "latin_1", sep = ";")
-  global inputs
   inputs[0] = df
   print("")
   print("Please select the column containing the texts:")
