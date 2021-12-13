@@ -1,15 +1,15 @@
 def user_input():
-  inputs = [None, None, None]
+  inputs = [None, None]
   from ipywidgets import interact
   def returner(Survey):
     inputs[0] = Survey
   def returner1(include_images):
     inputs[1] = include_images
-  def returner2(include_filters):
-    inputs[2] = include_filters
+  #def returner2(include_filters):
+  #  inputs[2] = include_filters
   interact(returner, Survey = "Paste big thing here...")
   interact(returner1, include_images = False) 
-  interact(returner2, include_filters= False) 
+  #interact(returner2, include_filters= False) 
   return(inputs)
 
 def go(inputs):
@@ -26,7 +26,7 @@ def go(inputs):
   from docx.oxml import parse_xml
   t = inputs[0]
   include_images = inputs[1]
-  include_filters = inputs[2]
+  include_filters = False #inputs[2]
 
   # layout = [
   #         [sg.Text("WARNING: So far, this is a quick and dirty solution.\n"
