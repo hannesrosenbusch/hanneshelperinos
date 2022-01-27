@@ -8,7 +8,7 @@ setup(
     package_dir = {
     'surveyexport': 'surveyexport',
     'sentiment': 'sentiment'},
-    packages=find_packages(),
+    packages=find_packages('hanneshelpers'),
     install_requires=['easynmt==2.0.1', 'python-docx'],
     version='0.1',
     license='MIT',
