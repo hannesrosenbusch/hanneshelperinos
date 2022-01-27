@@ -5,9 +5,6 @@ setup(
     url='https://github.com/hannesrosenbusch/hanneshelpers',
     author='Hannes Rosenbusch',
     author_email='',
-    package_dir = {
-    'surveyexport': 'surveyexport',
-    'sentiment': 'sentiment'},
     packages=find_packages('hanneshelpers'),
     install_requires=['easynmt==2.0.1', 'python-docx'],
     version='0.1',
