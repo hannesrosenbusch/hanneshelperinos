@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='hanneshelpers',
+    name='hanneshelperinos',
     url='https://github.com/hannesrosenbusch/hanneshelpers',
     author='Hannes Rosenbusch',
     author_email='',
