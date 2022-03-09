@@ -261,9 +261,9 @@ def go(inputs):
       
       #Anweisung für Teilnehmer
       #if "allowCustomText" in survey_raw['questions'][i]:
-      #    if survey_raw['questions'][i]["allowCustomText"] == True:
-      #        freetex_answer_test = survey_raw['questions'][i]["customTextName"]
-      #        cells[1].add_paragraph(str(str(freetex_answer_test)+" (Freitext)"))
+      #    #if survey_raw['questions'][i]["allowCustomText"] == True:
+      #        #freetex_answer_test = survey_raw['questions'][i]["customTextName"]
+      #        #cells[1].add_paragraph(str(str(freetex_answer_test)+" (Freitext)"))
       
       #info texts        
       if survey_raw['questions'][i]['qtype'] == 'info' or survey_raw['questions'][i]['qtype'] == 'videoplay':
