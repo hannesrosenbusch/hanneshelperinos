@@ -263,8 +263,8 @@ def go(inputs):
       if "allowCustomText" in survey_raw['questions'][i]:
           try:
               if survey_raw['questions'][i]["allowCustomText"] == True:
-              freetex_answer_test = survey_raw['questions'][i]["customTextName"]
-              cells[1].add_paragraph(str(str(freetex_answer_test)+" (Freitext)"))
+                freetex_answer_test = survey_raw['questions'][i]["customTextName"]
+                cells[1].add_paragraph(str(str(freetex_answer_test)+" (Freitext)"))
           except:
               pass
 
