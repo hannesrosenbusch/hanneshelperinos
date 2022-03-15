@@ -434,4 +434,6 @@ def go(inputs):
   table.cell(0, 2)._tc.get_or_add_tcPr().append(shading3)
 
   #Save it
-  document.save(str(survey_raw['title']+'_export.docx'))
+  file_name = survey_raw['title'].replace(":", "-")
+  file_name = file_name.replace("/", "-")
+  document.save(str(file_name +'_export.docx'))
