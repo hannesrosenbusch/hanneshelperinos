@@ -105,7 +105,9 @@ def go(inputs):
   question_no = 1
 
   for i in range(len(survey_raw['questions'])): #question number
+      print('haa')
       if survey_raw['questions'][i]['hideForCompany'] == 'true':
+          print('hehe')
           continue
       cells = table.add_row().cells
 
