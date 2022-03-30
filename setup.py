@@ -6,7 +6,7 @@ setup(
     author='Hannes Rosenbusch',
     author_email='',
     packages=['hanneshelpers'],
-    install_requires=['easynmt==2.0.1', 'python-docx'],
+    install_requires=['python-docx'], #'easynmt==2.0.1', 
     version='0.1',
     license='MIT',
     description='bunch of my functions',
