@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-        ref: testing
+          ref: testing
       - name: set up python
         uses: actions/setup-python@v1
         with:
