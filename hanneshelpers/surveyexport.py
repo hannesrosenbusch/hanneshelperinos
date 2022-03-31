@@ -1,5 +1,5 @@
 def user_input():
-  inputs = [None, None]
+  inputs = [None, None, None]
   from ipywidgets import interact
   def returner(Survey):
     inputs[0] = Survey
