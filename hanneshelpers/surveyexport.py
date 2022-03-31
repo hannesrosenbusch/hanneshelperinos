@@ -5,15 +5,14 @@ def user_input():
     inputs[0] = Survey
   def returner1(include_images):
     inputs[1] = include_images
-  #def returner2(include_filters):
-  #  inputs[2] = include_filters
+  def returner2(include_filters):
+    inputs[2] = include_filters
   interact(returner, Survey = "Paste big thing here...")
   interact(returner1, include_images = False) 
-  #interact(returner2, include_filters= False) 
+  interact(returner2, english_lang= False) 
   return(inputs)
 
 def go(inputs):
-  print(inputs)
   import json
   import requests
   from docx import Document
@@ -27,7 +26,8 @@ def go(inputs):
   from docx.oxml import parse_xml
   t = inputs[0]
   include_images = inputs[1]
-  include_filters = False #inputs[2]
+  english_lang = inputs[2]
+  include_filters = False
 
   # layout = [
   #         [sg.Text("WARNING: So far, this is a quick and dirty solution.\n"
@@ -49,20 +49,36 @@ def go(inputs):
   #while True:
   #dictionary of question types:
   dict_qtypes = {"mc":"Multiple Choice",
-            "freetext":"Offene Frage",
-            "info":"Infobox",
-            "matrix":"Matrix",
-            "likert": "Likert",
-            "imagecloud": "Bildvergleich (Galerie)",
-            "image": "Bildvergleich (mit Bezeichnung)",
-            "numericslider": "Numerischer Slider / NPS",
-            "ranking": "Ranking",
-            "starslider": "Stars",
-            "propertyslider": "Präferenz-Slider",
-            "number": "Zahl (Freie Eingabe)",
-            "heatmap": "Heatmap",
-            "videoplay": "Audio/Video",
-            "photocaptur": "Fotoaufnahme"}
+  "freetext":"Offene Frage",
+  "info":"Infobox",
+  "matrix":"Matrix",
+  "likert": "Likert",
+  "numericslider": "Numerischer Slider / NPS",
+  "ranking": "Ranking",
+  "starslider": "Stars",
+  "propertyslider": "Präferenz-Slider",
+  "number": "Zahl (Freie Eingabe)",
+  "heatmap": "Heatmap",
+  "videoplay": "Audio/Video",
+  "photocaptur": "Fotoaufnahme"}
+
+  if english_lang:
+    dict_qtypes = {"mc":"Multiple Choice",
+    "freetext":"Open question",
+    "info":"Info box",
+    "matrix":"Matrix",
+    "likert": "Likert",
+    "imagecloud": "Multiple Choice (with images)",
+    "image": "Multiple Choice (with images and text)",
+    "numericslider": "Numeric slider / NPS",
+    "ranking": "Ranking",
+    "starslider": "Stars",
+    "propertyslider": "Preference slider",
+    "number": "Number (Open entry)",
+    "heatmap": "Heatmap",
+    "videoplay": "Audio/Video",
+    "photocaptur": "Take photo"}
+
 
 
   # event, values = window.read()
@@ -96,10 +112,17 @@ def go(inputs):
   table.style = 'TableGrid'
 
   # populate header row 
-  heading_cells = table.rows[0].cells
-  heading_cells[0].paragraphs[0].add_run('Frage').bold = True
-  heading_cells[1].paragraphs[0].add_run('Fragebogen').bold = True
-  heading_cells[2].paragraphs[0].add_run('Fragetyp').bold = True
+  if english_lang:
+    heading_cells = table.rows[0].cells
+    heading_cells[0].paragraphs[0].add_run('Question no.').bold = True
+    heading_cells[1].paragraphs[0].add_run('Survey').bold = True
+    heading_cells[2].paragraphs[0].add_run('Question type').bold = True
+
+  else:
+    heading_cells = table.rows[0].cells
+    heading_cells[0].paragraphs[0].add_run('Frage').bold = True
+    heading_cells[1].paragraphs[0].add_run('Fragebogen').bold = True
+    heading_cells[2].paragraphs[0].add_run('Fragetyp').bold = True
 
   # contents
   info_no = 1
@@ -146,7 +169,10 @@ def go(inputs):
 
       #Answers -------------            
       if survey_raw['questions'][i]['qtype'] == 'matrix':
-          cells[1].add_paragraph("Antworten:").bold = True
+          if english_lang:
+            cells[1].add_paragraph("Answers:").bold = True
+          else:
+            cells[1].add_paragraph("Antworten:").bold = True
 
       #Answer text and letter
       answer_letter = 65 #because chr(65) = 'A'
@@ -163,7 +189,11 @@ def go(inputs):
       if random_answer == True:
           for j in range(len(survey_raw['questions'][i]['answers'])): #answers
               if survey_raw['questions'][i]['answers'][j]["random"] == False:
-                  random_answer_text = " (nicht randomisiert)"
+                if english_lang:
+                    random_answer_text = " (not randomized)"
+                else:
+                    random_answer_text = " (nicht randomisiert)"
+
           
 
               answer_filter_text = " "
@@ -267,7 +297,12 @@ def go(inputs):
           try:
               if survey_raw['questions'][i]["allowCustomText"] == True:
                 freetex_answer_test = survey_raw['questions'][i]["customTextName"]
-                cells[1].add_paragraph(str(str(freetex_answer_test)+" (Freitext)"))
+                if survey_raw['questions'][i]['answers'][j]["random"] == False:
+                    if english_lang:
+                        cells[1].add_paragraph(str(str(freetex_answer_test)+" (Freetext)"))
+                    else:
+                        cells[1].add_paragraph(str(str(freetex_answer_test)+" (Freitext)"))
+
           except:
               pass
 
@@ -304,7 +339,10 @@ def go(inputs):
       if random_mat_items == True:
           for j in range(len(survey_raw['questions'][i]['rows'])): #answers
               if survey_raw['questions'][i]['rows'][j]["random"] == False:
-                  random_mat_items_text = " (nicht randomisiert)"
+                if english_lang:
+                    random_mat_items_text = " (not randomized)"
+                else:
+                    random_mat_items_text = " (nicht randomisiert)"
       
           answer_letter = 65 #because chr(65) = 'A'    
           if survey_raw['questions'][i]['rows'] != []: #Test whether matrix items exist
@@ -343,7 +381,11 @@ def go(inputs):
           for abbreviation, new_label in dict_qtypes.items():
               if abbreviation == survey_raw['questions'][i]['qtype']:
                   question_type = survey_raw['questions'][i]['qtype'].replace(abbreviation, new_label)
-          cells[2].paragraphs[0].add_run(question_type) 
+          try:
+            cells[2].paragraphs[0].add_run(question_type)
+          except:
+            cells[2].paragraphs[0].add_run("question type missing")
+
 
       #if survey_raw['questions'][i]['qtype'] == "mc":
       else:
@@ -354,19 +396,33 @@ def go(inputs):
                   cells[2].paragraphs[0].add_run("Multiple Choice")
                   
       #Randomisation
-      if random_mat_items == True: 
-          cells[2].add_paragraph("(Items randomisiert)")
+      if random_mat_items == True:
+        if english_lang:
+            cells[2].add_paragraph("(Items randomized)")
+        else:
+            cells[2].add_paragraph("(Items randomisiert)")
+
       
       if random_answer == True:
-          cells[2].add_paragraph("(Antworten randomisiert)")
+        if english_lang:
+            cells[2].add_paragraph("(Answers randomized)")
+        else:
+            cells[2].add_paragraph("(Antworten randomisiert)")
+          
           
       #Max options
       if "maxOptions" in survey_raw['questions'][i]:
-          cells[2].add_paragraph("Max Antworten: "+str(survey_raw['questions'][i]['maxOptions']))
+        if english_lang:
+            cells[2].add_paragraph("Max Answers: "+str(survey_raw['questions'][i]['maxOptions']))
+        else:
+            cells[2].add_paragraph("Max Antworten: "+str(survey_raw['questions'][i]['maxOptions']))
           
       #Min options
       if "minOptions" in survey_raw['questions'][i]:
-          cells[2].add_paragraph("Min Antworten: "+str(survey_raw['questions'][i]['minOptions']))
+        if english_lang:
+            cells[2].add_paragraph("Min Answers: "+str(survey_raw['questions'][i]['minOptions']))
+        else:
+            cells[2].add_paragraph("Min Antworten: "+str(survey_raw['questions'][i]['minOptions']))
 
       #Do filter exist?
       if survey_raw['questions'][i]["filterRequirements"] != [] or survey_raw['questions'][i]["filterNotRequirements"] != []:
