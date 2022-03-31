@@ -1,9 +1,6 @@
 name: surveyexport
 
-on:
-  push:
-    branches:
-      - testing
+on: push
 
 jobs:
   my_checks:
@@ -11,8 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: testing
       - name: set up python
         uses: actions/setup-python@v1
         with:
