@@ -13,6 +13,7 @@ def user_input():
   return(inputs)
 
 def go(inputs):
+	print(inputs)
   import json
   import requests
   from docx import Document
