@@ -1,3 +1,3 @@
 hanneshelpers Module
 
-**Functions that I useee**
+**Functions that I use**
