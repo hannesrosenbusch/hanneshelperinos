@@ -1,6 +1,9 @@
 name: surveyexport
 
-on: push
+on:
+  push:
+    branches:
+      - testing
 
 jobs:
   my_checks:
