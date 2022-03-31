@@ -5,11 +5,11 @@ def user_input():
     inputs[0] = Survey
   def returner1(include_images):
     inputs[1] = include_images
-  def returner2(english_lang):
-    inputs[2] = english_lang
+  def returner2(english_labels):
+    inputs[2] = english_labels
   interact(returner, Survey = "Paste big thing here...")
   interact(returner1, include_images = False) 
-  interact(returner2, english_lang= False) 
+  interact(returner2, english_labels= False) 
   return(inputs)
 
 def go(inputs):
