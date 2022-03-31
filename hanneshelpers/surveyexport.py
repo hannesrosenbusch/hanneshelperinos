@@ -28,6 +28,7 @@ def go(inputs):
   include_images = inputs[1]
   english_lang = inputs[2]
   include_filters = False
+  print(inputs)
 
   # layout = [
   #         [sg.Text("WARNING: So far, this is a quick and dirty solution.\n"
