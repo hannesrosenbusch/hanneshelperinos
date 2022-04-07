@@ -1,5 +1,5 @@
 # pylint: disable=C0301
-'''module tester'''
+'''surveyexport module tester'''
 
 
 import os
