@@ -10,4 +10,6 @@ setup(
     version='0.1',
     license='MIT',
     description='bunch of my functions',
+    include_package_data=True,
+    package_data={'': ['data/*.png']}
 )
