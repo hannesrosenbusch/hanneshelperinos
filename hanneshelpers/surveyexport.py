@@ -464,7 +464,7 @@ def go(inputs):
                     question_type = survey_raw['questions'][i]['qtype'].replace(
                         abbreviation, new_label)
             try:
-                cells[2].paragraphs[0].add_run(question_type)
+                cells[2].paragraphs[0].add_run("question type missing")
             except ValueError:
                 cells[2].paragraphs[0].add_run("question type missing")
 
