@@ -18,7 +18,7 @@ import pkg_resources
 
 
 def user_input():
-    '''get user inputs from widget interface in colan notebook. 
+    '''get user inputs from widget interface in colan notebook
     inputs consist of long jsonstring with survey architecture, and two booleans'''
     inputs = [None, None, None]
 
@@ -378,7 +378,7 @@ def go(inputs):
                             cells[1].add_paragraph(
                                 str(str(freetex_answer_test)+" (Freitext)"))
 
-            except ValueError:
+            except: # pylint: disable=W0702
                 pass
 
         # info texts
@@ -386,7 +386,7 @@ def go(inputs):
             try:
                 cells[1].add_paragraph(
                     str(survey_raw['questions'][i]['infoText']))
-            except ValueError:
+            except: # pylint: disable=W0702
                 pass
 
         # include images
@@ -463,10 +463,10 @@ def go(inputs):
                 if abbreviation == survey_raw['questions'][i]['qtype']:
                     question_type = survey_raw['questions'][i]['qtype'].replace(
                         abbreviation, new_label)
-            try:
-                cells[2].paragraphs[0].add_run("question type missing")
-            except ValueError:
-                cells[2].paragraphs[0].add_run("question type missing")
+                    try:
+                        cells[2].paragraphs[0].add_run(question_type)
+                    except:  # pylint: disable=W0702
+                        cells[2].paragraphs[0].add_run("missing question type")
 
         # if survey_raw['questions'][i]['qtype'] == "mc":
         else:
