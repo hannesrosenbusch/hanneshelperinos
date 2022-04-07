@@ -22,7 +22,7 @@ def test_go():
     go(inp)
     current_files = os.listdir()
     assert "Kearney - Skincare survey US TOTAL_export.docx" in current_files
-    #os.remove("Kearney - Skincare survey US TOTAL_export.docx")
+    os.remove("Kearney - Skincare survey US TOTAL_export.docx")
 
 
 
