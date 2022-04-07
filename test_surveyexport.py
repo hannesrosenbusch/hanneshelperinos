@@ -8,4 +8,6 @@ def test_go():
 	go(inp)
 	current_files = os.listdir()
 	assert("E-Food Spryker UK-DE-US_export.docx" in current_files)
-	os.remove("E-Food Spryker UK-DE-US_export.docx")
+	#os.remove("E-Food Spryker UK-DE-US_export.docx")
+
+test_go()

@@ -13,6 +13,7 @@ def user_input():
   return(inputs)
 
 def go(inputs):
+  import pkg_resources
   import json
   import requests
   from docx import Document
@@ -24,11 +25,14 @@ def go(inputs):
   from docx.shared import Pt
   from docx.oxml.ns import nsdecls
   from docx.oxml import parse_xml
+  from docx.enum.text import WD_ALIGN_PARAGRAPH
+  from docx.shared import RGBColor
+  from datetime import date
   t = inputs[0]
   include_images = inputs[1]
   english_lang = inputs[2]
   include_filters = False
-  print(inputs)
+  #print(inputs)
 
   # layout = [
   #         [sg.Text("WARNING: So far, this is a quick and dirty solution.\n"
@@ -98,15 +102,72 @@ def go(inputs):
   survey_raw = json.loads(json_string)
 
   document = Document()
+
+
+
+
+
+
+  #General style
   style = document.styles['Normal']
   font = style.font
   font.name = 'Roboto'
   font.size = Pt(10)
   paragraph_format = style.paragraph_format
+  #Add header for first page with table (logo on the left, address on the right)
+  header = document.sections[0].first_page_header 
+  document.sections[0].different_first_page_header_footer = True
+  htable = header.add_table(1, 4, Inches(6.25))
+  htab_cells = htable.rows[0].cells
+  ht0 = htab_cells[0].paragraphs[0] #cell including the logo
+  kh = ht0.add_run(style = None)
+  stream = pkg_resources.resource_stream(__name__, 'data/Appinio-Logo.png')
+  kh.add_picture(stream, width=Inches(1.401575))
+  ht1 = htab_cells[3].paragraphs[0] #cell including address and contact information
+  run = ht1.add_run("APPINIO GmbH\nGroße Theaterstraße31\n20354 Hamburg\n\ncontact@appinio.com\n+49 40 / 413 49 710\nwww.appinio.com")
+  run.font.name = "Roboto"
+  run.font.size = Pt(8)
+  run.font.color.rgb = RGBColor(69, 107, 132)
+  ht1.alignment = WD_ALIGN_PARAGRAPH.LEFT
+  #header for following pages only with Appinio logo
+  header = document.sections[0].header
+  document.sections[0].different_first_page_header_footer = True
+  htable = header.add_table(2, 2, Inches(6))
+  htab_cells = htable.rows[0].cells
+  ht0 = htab_cells[0].paragraphs[0] #cell including the logo
+  kh = ht0.add_run(style = None)
+  kh.add_picture(stream, width=Inches(1.401575))
+  #Add title and date
+  document.add_paragraph()
+  para = document.add_paragraph()
+  run = para.add_run('\t\t Hamburg, ' + str(date.today().strftime("%d.%m.%Y")))
+  run.font.color.rgb = RGBColor(69, 107, 132)
+  para.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+  document.add_paragraph()        
+         
+  run = document.add_paragraph().add_run(survey_raw['title'])
+  font = run.font
+  font.name = 'Roboto Medium'
+  font.size = Pt(14)
+  font.color.rgb = RGBColor(5, 49, 73)
+  document.add_paragraph()
+
+  #style = document.styles['Normal']
+  #font = style.font
+  #font.name = 'Roboto'
+  #font.size = Pt(10)
+  #paragraph_format = style.paragraph_format
 
   #Add header
-  document.add_paragraph(survey_raw['title'])
-  document.add_paragraph()
+  #document.add_paragraph(survey_raw['title'])
+  #document.add_paragraph()
+
+
+
+
+
+
+
 
   # add table 
   table = document.add_table(1, 3)
