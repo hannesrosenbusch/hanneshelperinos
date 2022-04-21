@@ -267,12 +267,13 @@ def go(inputs):
                                 survey_raw['questions'][i]['answers'][j]["filterRequirements"][k])
                             for l in range(len(survey_raw['questions'])):
                                 for m in range(len(survey_raw['questions'][l]['answers'])):
-                                    if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
-                                        infoxboxes_until_here = info_no - 1
-                                        filter_question_no = 1 + l - infoxboxes_until_here
-                                        filter_answer_letter = 65 + m
-                                        answer_filter_text = str(
-                                            " (IF F"+str(filter_question_no)+str(chr(filter_answer_letter))+")"+random_answer_text)
+                                    if "filterId" in survey_raw['questions'][l]['answers'][m].keys():
+                                        if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
+                                            infoxboxes_until_here = info_no - 1
+                                            filter_question_no = 1 + l - infoxboxes_until_here
+                                            filter_answer_letter = 65 + m
+                                            answer_filter_text = str(
+                                                " (IF F"+str(filter_question_no)+str(chr(filter_answer_letter))+")"+random_answer_text)
                                 for n in range(len(survey_raw['questions'][l]['key'])):
                                     if filter_id in survey_raw['questions'][l]['key'][n]["filterId"]:
                                         infoxboxes_until_here = info_no - 1
@@ -288,12 +289,13 @@ def go(inputs):
                                 survey_raw['questions'][i]['answers'][j]["filterNotRequirements"][k])
                             for l in range(len(survey_raw['questions'])):
                                 for m in range(len(survey_raw['questions'][l]['answers'])):
-                                    if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
-                                        infoxboxes_until_here = info_no - 1
-                                        filter_question_no = 1 + l - infoxboxes_until_here
-                                        filter_answer_letter = 65 + m
-                                        answer_filter_text = str(
-                                            " (IF NOT F"+str(filter_question_no)+str(chr(filter_answer_letter))+")"+random_answer_text)
+                                    if "filterId" in survey_raw['questions'][l]['answers'][m].keys():
+                                        if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
+                                            infoxboxes_until_here = info_no - 1
+                                            filter_question_no = 1 + l - infoxboxes_until_here
+                                            filter_answer_letter = 65 + m
+                                            answer_filter_text = str(
+                                                " (IF NOT F"+str(filter_question_no)+str(chr(filter_answer_letter))+")"+random_answer_text)
                                 for n in range(len(survey_raw['questions'][l]['key'])):
                                     if filter_id in survey_raw['questions'][l]['key'][n]["filterId"]:
                                         infoxboxes_until_here = info_no - 1
@@ -319,15 +321,16 @@ def go(inputs):
                                 survey_raw['questions'][i]['answers'][j]["filterRequirements"][k])
                             for l in range(len(survey_raw['questions'])):
                                 for m in range(len(survey_raw['questions'][l]['answers'])):
-                                    if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
-                                        if survey_raw['questions'][i]['qtype'] == 'info' or survey_raw['questions'][i]['qtype'] == 'videoplay':
-                                            infoxboxes_until_here = info_no
-                                        else:
-                                            infoxboxes_until_here = info_no - 1
-                                        filter_question_no = 1 + l - infoxboxes_until_here
-                                        filter_answer_letter = 65 + m
-                                        answer_filter_text = str(
-                                            " (IF F"+str(filter_question_no)+str(chr(filter_answer_letter))+")")
+                                    if "filterId" in survey_raw['questions'][l]['answers'][m].keys():
+                                        if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
+                                            if survey_raw['questions'][i]['qtype'] == 'info' or survey_raw['questions'][i]['qtype'] == 'videoplay':
+                                                infoxboxes_until_here = info_no
+                                            else:
+                                                infoxboxes_until_here = info_no - 1
+                                            filter_question_no = 1 + l - infoxboxes_until_here
+                                            filter_answer_letter = 65 + m
+                                            answer_filter_text = str(
+                                                " (IF F"+str(filter_question_no)+str(chr(filter_answer_letter))+")")
                                 for n in range(len(survey_raw['questions'][l]['key'])):
                                     if filter_id in survey_raw['questions'][l]['key'][n]["filterId"]:
                                         if survey_raw['questions'][i]['qtype'] == 'info' or survey_raw['questions'][i]['qtype'] == 'videoplay':
@@ -346,12 +349,13 @@ def go(inputs):
                                 survey_raw['questions'][i]['answers'][j]["filterNotRequirements"][k])
                             for l in range(len(survey_raw['questions'])):
                                 for m in range(len(survey_raw['questions'][l]['answers'])):
-                                    if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
-                                        infoxboxes_until_here = info_no - 1
-                                        filter_question_no = 1 + l - infoxboxes_until_here
-                                        filter_answer_letter = 65 + m
-                                        answer_filter_text = str(
-                                            " (IF NOT F"+str(filter_question_no)+str(chr(filter_answer_letter))+")")
+                                    if "filterId" in survey_raw['questions'][l]['answers'][m].keys():
+                                        if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
+                                            infoxboxes_until_here = info_no - 1
+                                            filter_question_no = 1 + l - infoxboxes_until_here
+                                            filter_answer_letter = 65 + m
+                                            answer_filter_text = str(
+                                                " (IF NOT F"+str(filter_question_no)+str(chr(filter_answer_letter))+")")
                                 for n in range(len(survey_raw['questions'][l]['key'])):
                                     if filter_id in survey_raw['questions'][l]['key'][n]["filterId"]:
                                         infoxboxes_until_here = info_no - 1
@@ -520,19 +524,20 @@ def go(inputs):
                 for l in range(len(survey_raw['questions'])):
                     if survey_raw['questions'][l]['answers'] != []:
                         for m in range(len(survey_raw['questions'][l]['answers'])):
-                            if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
-                                if survey_raw['questions'][l]['qtype'] == 'info' or survey_raw['questions'][l]['qtype'] == 'videoplay':
-                                    infoxboxes_until_here = info_no
-                                else:
-                                    infoxboxes_until_here = info_no - 1
-                                print("Infoboxes:" + str(infoxboxes_until_here))
-                                print("l:"+str())
-                                filter_question_no = 1 + l - infoxboxes_until_here
-                                print("filter_qestion:" +
-                                      str(filter_question_no))
-                                filter_answer_letter = 65 + m
-                                cells[2].add_paragraph(
-                                    "IF F"+str(filter_question_no)+str(chr(filter_answer_letter)))
+                            if "filterId" in survey_raw['questions'][l]['answers'][m].keys():
+                                if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
+                                    if survey_raw['questions'][l]['qtype'] == 'info' or survey_raw['questions'][l]['qtype'] == 'videoplay':
+                                        infoxboxes_until_here = info_no
+                                    else:
+                                        infoxboxes_until_here = info_no - 1
+                                    print("Infoboxes:" + str(infoxboxes_until_here))
+                                    print("l:"+str())
+                                    filter_question_no = 1 + l - infoxboxes_until_here
+                                    print("filter_qestion:" +
+                                          str(filter_question_no))
+                                    filter_answer_letter = 65 + m
+                                    cells[2].add_paragraph(
+                                        "IF F"+str(filter_question_no)+str(chr(filter_answer_letter)))
                     elif survey_raw['questions'][l]['key'] != []:
                         for n in range(len(survey_raw['questions'][l]['key'])):
                             if filter_id in survey_raw['questions'][l]['key'][n]["filterId"]:
@@ -553,12 +558,13 @@ def go(inputs):
                 for l in range(len(survey_raw['questions'])):
                     if survey_raw['questions'][l]['answers'] != []:
                         for m in range(len(survey_raw['questions'][l]['answers'])):
-                            if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
-                                infoxboxes_until_here = info_no - 1
-                                filter_question_no = 1 + l - infoxboxes_until_here
-                                filter_answer_letter = 65 + m
-                                cells[2].add_paragraph(
-                                    "IF NOT F"+str(filter_question_no)+str(chr(filter_answer_letter)))
+                            if "filterId" in survey_raw['questions'][l]['answers'][m].keys():
+                                if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
+                                    infoxboxes_until_here = info_no - 1
+                                    filter_question_no = 1 + l - infoxboxes_until_here
+                                    filter_answer_letter = 65 + m
+                                    cells[2].add_paragraph(
+                                        "IF NOT F"+str(filter_question_no)+str(chr(filter_answer_letter)))
                     if survey_raw['questions'][l]['key'] != []:
                         for n in range(len(survey_raw['questions'][l]['key'])):
                             if filter_id in survey_raw['questions'][l]['key'][n]["filterId"]:
