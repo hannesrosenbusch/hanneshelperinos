@@ -38,7 +38,7 @@ def test_go():
            True,
            True]
     go(inp)
-    #current_files = os.listdir()
-    #assert "DEMO -- Simon Kucher_export.docx" in current_files
-    #os.remove("DEMO -- Simon Kucher_export.docx")
+    current_files = os.listdir()
+    assert "Test_Export_Bugfix_export.docx" in current_files
+    os.remove("Test_Export_Bugfix_export.docx")
 test_go()
