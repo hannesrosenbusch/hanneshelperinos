@@ -218,7 +218,6 @@ def go(inputs):
                         random_answer_text = " (nicht randomisiert)"
 
                 answer_filter_text = " "
-                
 
                 answer_text = str(chr(
                     answer_letter) + ": " + survey_raw['questions'][i]['answers'][j]['text'] + answer_filter_text+random_answer_text)
