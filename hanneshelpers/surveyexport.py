@@ -483,7 +483,7 @@ def go(inputs):
                                         infoxboxes_until_here = info_no - 1
                                     print("Infoboxes:" + str(infoxboxes_until_here))
                                     print("l:"+str())
-                                    filter_question_no = 1 + l - len(hidden)
+                                    filter_question_no = 1 + l - len(hidden) - infoxboxes_until_here
                                     print("filter_qestion:" +
                                           str(filter_question_no))
                                     filter_answer_letter = 65 + m
@@ -495,7 +495,7 @@ def go(inputs):
                                 #     infoxboxes_until_here = info_no
                                 # else:
                                 #     infoxboxes_until_here = info_no - 1
-                                filter_question_no = 1 + l  - len(hidden) #- infoxboxes_until_here
+                                filter_question_no = 1 + l  - len(hidden) - infoxboxes_until_here
                                 filter_answer_letter = 65 + n
                                 cells[2].add_paragraph("IF F" + str(filter_question_no) + str(chr(filter_answer_letter)))
 
@@ -509,15 +509,15 @@ def go(inputs):
                         for m in range(len(survey_raw['questions'][l]['answers'])):
                             if "filterId" in survey_raw['questions'][l]['answers'][m].keys():
                                 if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
-                                    #infoxboxes_until_here = info_no - 1
-                                    filter_question_no = 1 + l  - len(hidden)#- infoxboxes_until_here
+                                    infoxboxes_until_here = info_no - 1
+                                    filter_question_no = 1 + l  - len(hidden) - infoxboxes_until_here
                                     filter_answer_letter = 65 + m
                                     cells[2].add_paragraph("IF NOT F"+str(filter_question_no) + str(chr(filter_answer_letter)))
                     if survey_raw['questions'][l]['key'] != []:
                         for n in range(len(survey_raw['questions'][l]['key'])):
                             if filter_id in survey_raw['questions'][l]['key'][n]["filterId"]:
-                                #infoxboxes_until_here = info_no - 1
-                                filter_question_no = 1 + l  - len(hidden)#- infoxboxes_until_here
+                                infoxboxes_until_here = info_no - 1
+                                filter_question_no = 1 + l  - len(hidden) - infoxboxes_until_here
                                 filter_answer_letter = 65 + n
                                 cells[2].add_paragraph("IF NOT F" + str(filter_question_no) + str(chr(filter_answer_letter)))
 
