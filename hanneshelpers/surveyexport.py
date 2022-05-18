@@ -148,9 +148,11 @@ def go(inputs):
     # contents
     info_no = 1
     question_no = 1
+    hidden = []
 
     for i in range(len(survey_raw['questions'])):  # iterate over questions
         if survey_raw['questions'][i]['hideForCompany']:
+            hidden.append(i)
             continue
         cells = table.add_row().cells
 
@@ -164,8 +166,7 @@ def go(inputs):
 
         # cell 2 -------------
         # question wording -------------
-        cells[1].paragraphs[0].add_run(
-            survey_raw['questions'][i]['text']).bold = True
+        cells[1].paragraphs[0].add_run(survey_raw['questions'][i]['text']).bold = True
         paragraph_format.space_before = Pt(2)
         paragraph_format.space_after = Pt(2)
 
@@ -397,7 +398,6 @@ def go(inputs):
 
         # if not randomized
         if not random_mat_items:
-
             answer_letter = 65  # because chr(65) = 'A'
             if survey_raw['questions'][i]['rows'] != []:  # Test whether matrix items exist
                 cells[1].add_paragraph()
@@ -483,7 +483,7 @@ def go(inputs):
                                         infoxboxes_until_here = info_no - 1
                                     print("Infoboxes:" + str(infoxboxes_until_here))
                                     print("l:"+str())
-                                    filter_question_no = 1 + l - infoxboxes_until_here
+                                    filter_question_no = 1 + l - len(hidden)
                                     print("filter_qestion:" +
                                           str(filter_question_no))
                                     filter_answer_letter = 65 + m
@@ -495,7 +495,7 @@ def go(inputs):
                                 #     infoxboxes_until_here = info_no
                                 # else:
                                 #     infoxboxes_until_here = info_no - 1
-                                filter_question_no = 1 + l #- infoxboxes_until_here
+                                filter_question_no = 1 + l  - len(hidden) #- infoxboxes_until_here
                                 filter_answer_letter = 65 + n
                                 cells[2].add_paragraph("IF F" + str(filter_question_no) + str(chr(filter_answer_letter)))
 
@@ -510,14 +510,14 @@ def go(inputs):
                             if "filterId" in survey_raw['questions'][l]['answers'][m].keys():
                                 if filter_id in survey_raw['questions'][l]['answers'][m]["filterId"]:
                                     #infoxboxes_until_here = info_no - 1
-                                    filter_question_no = 1 + l #- infoxboxes_until_here
+                                    filter_question_no = 1 + l  - len(hidden)#- infoxboxes_until_here
                                     filter_answer_letter = 65 + m
                                     cells[2].add_paragraph("IF NOT F"+str(filter_question_no) + str(chr(filter_answer_letter)))
                     if survey_raw['questions'][l]['key'] != []:
                         for n in range(len(survey_raw['questions'][l]['key'])):
                             if filter_id in survey_raw['questions'][l]['key'][n]["filterId"]:
                                 #infoxboxes_until_here = info_no - 1
-                                filter_question_no = 1 + l #- infoxboxes_until_here
+                                filter_question_no = 1 + l  - len(hidden)#- infoxboxes_until_here
                                 filter_answer_letter = 65 + n
                                 cells[2].add_paragraph("IF NOT F" + str(filter_question_no) + str(chr(filter_answer_letter)))
 
